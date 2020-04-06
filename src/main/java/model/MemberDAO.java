@@ -33,7 +33,7 @@ public class MemberDAO {
             ps.setString(6, member.getEmploymentgroup());
 
             int result = ps.executeUpdate();
-
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,6 +42,22 @@ public class MemberDAO {
 
     public static boolean updateMember(Member member) throws SQLException {
         boolean rowUpdated = false;
+        
+         try {
+            Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement ps = connection.prepareStatement(UPDATE_MEMBERS_SQL);
+            ps.setString(1, member.getMembername());
+            ps.setString(2, member.getPassword());
+            ps.setString(3, member.getEmail());
+            ps.setDouble(4, member.getBasesalary());
+            ps.setDouble(5, member.getBonus());
+            ps.setString(6, member.getEmploymentgroup());
+            ps.setInt(7, member.getId());
+            ps.executeUpdate();
+            connection.close();
+        } catch (SQLException e) {
+
+        }
 
         //TODO: prepare and execute statement to update a member    
         return rowUpdated;
@@ -50,6 +66,16 @@ public class MemberDAO {
     public static boolean deleteMember(int id) throws SQLException {
         boolean rowDeleted = false;
 
+        
+         try {
+            Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement ps = connection.prepareStatement(DELETE_MEMBERS_SQL);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+
+        }
+         
         //TODO: prepare and execute statement to delete a member
         return rowDeleted;
     }
@@ -57,11 +83,28 @@ public class MemberDAO {
     public static Member selectMember(int id) {
         Member member = null;
 
-        //TODO: prepare and execute query to retrive a member by id
+        try {
+            Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_MEMBER_BY_ID);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int memberId = rs.getInt("id");
+                String membername = rs.getString("membername");
+                String password = rs.getString("password");
+                String email = rs.getString("email");
+                double basesalary = rs.getDouble("basesalary");
+                double bonus = rs.getDouble("bonus");
+                String employmentgroup = rs.getString("employmentgroup");
+                member = new Member(memberId, membername, password, email, basesalary, bonus, employmentgroup);
+            }
+            connection.close();
+        } catch (SQLException e) {
+
+        }
         return member;
     }
 
-    //This method is used by login() method in MemberServlet
     public static Member selectMember(String name) {
         Member member = null;
         try (
@@ -79,6 +122,7 @@ public class MemberDAO {
                 String employmentgroup = rs.getString("employmentgroup");
                 member = new Member(id, membername, password, email, basesalary, bonus, employmentgroup);
             }
+            connection.close();
         } catch (SQLException e) {
             printSQLException(e);
         }
@@ -101,6 +145,7 @@ public class MemberDAO {
                 String employmentgroup = rs.getString("employmentgroup");
                 members.add(new Member(id, membername, password, email, basesalary, bonus, employmentgroup));
             }
+            connection.close();
         } catch (SQLException e) {
             printSQLException(e);
         }

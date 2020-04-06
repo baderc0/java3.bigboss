@@ -75,7 +75,9 @@ public class MemberServlet extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
+        log("id: " + request.getParameter("id"));
 
+        request.setAttribute("member", MemberDAO.selectMember(Integer.parseInt(request.getParameter("id"))));
         //TODO: show edit form with existing member data
         getServletContext().getRequestDispatcher("/member.jsp").forward(request, response);
     }
@@ -120,14 +122,49 @@ public class MemberServlet extends HttpServlet {
 
     private void updateMember(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
+        
+        try {
+            String membername = request.getParameter("name");
+            if (membername.length() < 2) {
+                throw new Exception("name too short");
+            } else if (membername.length() > 40) {
+                throw new Exception("name too long");
+            }
 
-        //TODO: update an existing member
+            String password = request.getParameter("password");
+            if (password.length() < 2) {
+                throw new Exception("password too short");
+            } else if (password.length() > 20) {
+                throw new Exception("password too long");
+            }
+
+            String email = request.getParameter("email");
+            double basesalary = Double.parseDouble(request.getParameter("basesalary"));
+            if (basesalary < 0 || basesalary > 1000000000) {
+                throw new Exception("base salary out of range");
+            }
+            double bonus = Double.parseDouble(request.getParameter("bonus"));
+            if (bonus < 0 || bonus > 1000000000) {
+                throw new Exception("bonus out of range");
+            }
+            
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            String group = request.getParameter("employmentgroup");
+            Member member = new Member(id, membername, password, email, basesalary, bonus, group);
+            log(member.toString());
+            MemberDAO.updateMember(member);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         listMember(request, response);
     }
 
     private void deleteMember(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-
+        MemberDAO.deleteMember(Integer.parseInt(request.getParameter("id")));
         //TODO: delete a member
         listMember(request, response);
     }

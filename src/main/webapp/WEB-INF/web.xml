@@ -21,7 +21,6 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>memberlist.jsp</welcome-file>
-        <welcome-file>/list</welcome-file>
     </welcome-file-list>
     <error-page>
         <error-code>403</error-code>
