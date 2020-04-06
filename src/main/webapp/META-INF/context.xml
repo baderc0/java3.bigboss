@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/BigBossStarter">
+  <!-- the database and tables that contains usernames and passwords -->
+  <Resource name="jdbc/java3" type="javax.sql.DataSource" auth="Container" 
+            driverClassName="com.mysql.cj.jdbc.Driver" 
+            url="jdbc:mysql://localhost:3306/java3?autoReconnect=true&amp;serverTimezone=UTC" 
+            username="root" password="123456" 
+            logAbandoned="true" 
+            removeAbandoned="true" removeAbandonedTimeout="60" 
+            maxActive="100" maxIdle="30" maxWait="10000" />
+  
+<Realm dataSourceName="jdbc/java3" localDataSource="true" 
+  className="org.apache.catalina.realm.DataSourceRealm" 
+  userTable="members" userRoleTable="memberrole" 
+  userNameCol="membername" roleNameCol="rolename" userCredCol="password" 
+  debug="99" />     
+</Context>
