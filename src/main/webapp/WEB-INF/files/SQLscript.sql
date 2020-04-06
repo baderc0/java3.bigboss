@@ -1,4 +1,3 @@
--- CREATE DATABASE 'java3';
 use java3;
 
 create table employmentgroups (

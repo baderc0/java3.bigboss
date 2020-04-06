@@ -13,10 +13,13 @@
     </head>
     <body>
         <h1>Login Page</h1>
-        <form action="j_security_check" method="POST">
-            <p>Username:<input type="text" name="j_username" value="" /> </p>
-            <p>Password: <input type="text" name="j_password" value="" /> </p>
-            
+        <form action="j_security_check" method="post">
+            <label>Username</label>
+            <input type="text" name="j_username"><br><br>
+            <label>Password</label>
+            <input type="password" name="j_password"><br><br>
+            <label>&nbsp;</label>
+            <input type="submit" value="Login">
         </form>
     </body>
 </html>
